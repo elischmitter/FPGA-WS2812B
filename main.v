@@ -32,6 +32,7 @@ module main(CLOCK_50,out,KEY0,KEY1,led);
 	b=b^(8'b11111111);
 	led=g;
 	end
+	
 	end
 	send a (CLOCK_50,r,g,b,out);
 endmodule 
