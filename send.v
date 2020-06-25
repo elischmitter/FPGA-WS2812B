@@ -1,9 +1,10 @@
-module send(CLOCK_50,red, green, blue,out);
+module send(CLOCK_50,red, green, blue,out,E);
 	input CLOCK_50;
 	reg [4:0] i=0;
 	input [7:0] red;
 	input [7:0] green;
 	input [7:0] blue;
+	input E;
 	output reg out;
 	wire [23:0] data;
 	reg [3:0] ii=4'h0;
@@ -12,15 +13,13 @@ module send(CLOCK_50,red, green, blue,out);
 	parameter T1L = 20;
 	parameter T0H = 20;
 	parameter T0L = 40;
-   reg done=1;
+   reg don=1;
 	assign data={green,red,blue};
 	always @(posedge CLOCK_50)
 	begin
-	if(i==5'b11111)
-	begin 
-	i=5'b10111;
-	end
-	if(done ==1) begin
+	if(E==1)
+	begin
+	if(don ==1) begin
 	if(data[i] ==1)begin 
 		if(counter<=T1H)
 		begin 
@@ -28,39 +27,41 @@ module send(CLOCK_50,red, green, blue,out);
 		end
 		if(counter<=(T1L+T1H)&& counter >T1H)
 		begin
-		out=0;
+		out<=0;
 		end
 		if(counter>(T1L+T1H))
 		begin
-		counter=0;
-		done=0;
+		counter<=0;
+		don<=0;
 		end
-		counter=counter+1;
+		counter<=counter+1;
 	end
 
 	else
 	begin 
 			if(counter<=T0H)
 		begin 
-		out=1;
+		out<=1;
 		end
 		if(counter<=(T0L+T0H)&& counter >T0H)
 		begin
-		out=0;
+		out<=0;
 		end
 		if(counter>(T0L+T0H))
 		begin
-		counter=0;
-		done=0;
+		counter<=0;
+		don<=0;
 		end
-		counter=counter+1;
+		counter<=counter+1;
 	end 
 	end
 	else
 	begin
-	i=i-1;
-	done=1;
+	i<=i+1;
+	don<=1;
 	end
-	
+	if(i==11001)
+	i<=0;
+	end
 	end
 endmodule 
